@@ -33,25 +33,22 @@ var listener = app.listen(process.env.PORT, function () {
 
 // /api/timestamp/:date_string?
 app.get('/api/timestamp/:date_string?', function (req,res,next){
-  let reqDate = req.params.date_string;
-  console.log("The req.params.date_string returns: " + reqDate + " as a string");
-  console.log("The data type of reqDate is: " + typeof(reqDate));
-  console.log(parseInt(reqDate));
-  
+  let reqDate = req.params.date_string; //retrieve the date from the URL
+  // Checks if the the retrieved date is Undefined, and assigns the current date.
   if( reqDate == undefined){
     req.date = new Date();
-    console.log("NaN input returns: " + req.date);
   }
   else
   {
+    // Checks if the date is in unix form and parses the date portion of the URL input into an Integer.
     if(!isNaN(reqDate)){
       reqDate = parseInt(reqDate);
     }
+    // Stores the URL date as a Date type as part of the request.
     req.date = new Date(reqDate);
-    console.log("The valid or invalid date returns: " + req.date);
   }
-  
   next();
 },function(req,res){
+  // returns a JSON object of the date in Unix and UTC formats and provides a suitable response for invalid date URL entries.
   res.json({"unix": (req.date).getTime(), "utc": (req.date).toUTCString()});
 });
